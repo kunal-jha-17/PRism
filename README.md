@@ -1,4 +1,4 @@
-# 🔷 PRism: make pull requests trustworthy again
+# 🔷 PRism: make pull requests trustworthy again.
 
 **An open-source review shield for open-source maintainers, running on open-weight models you can host yourself.**
 
