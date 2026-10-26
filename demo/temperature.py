@@ -3,7 +3,7 @@
 
 def to_fahrenheit(celsius: float) -> float:
     """Convert Celsius to Fahrenheit."""
-    return celsius * 9 / 5
+    return celsius * 9 / 5 + 32
 
 
 def to_celsius(fahrenheit: float) -> float:
