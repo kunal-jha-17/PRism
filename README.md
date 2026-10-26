@@ -72,7 +72,7 @@ Based on public descriptions of each tool (October 2026). Each one solves a real
 | Learns from maintainer corrections | ❌ | ❌ | manual list | planned | ✅ |
 | Open-weight, self-hostable model | n/a | n/a | n/a | ❌ | ✅ |
 | Built-in injection defence | n/a | n/a | n/a | not stated | ✅ |
-| Contributor-side preflight | ❌ | ❌ | ❌ | ❌ | ✅ |
+| Contributor-side preflight | ✅ | ❌ | ❌ | ❌ | ✅ |
 | Never auto-closes | varies | ❌ | blocks | ✅ | ✅ |
 
 ## Quick start (5 minutes)
