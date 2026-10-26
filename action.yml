@@ -1,0 +1,41 @@
+name: "PRism review shield"
+description: "Open-source PR triage on open-weight models: claim receipts, proof of understanding, injection defence."
+author: "Team Cryptix"
+branding:
+  icon: "shield"
+  color: "blue"
+
+inputs:
+  provider:
+    description: "digitalocean | gemini | ollama | custom. Empty = detect from whichever key is set."
+    default: ""
+  model:
+    description: "Model id. Defaults to Gemma 4 for the chosen provider."
+    default: ""
+  base-url:
+    description: "Any OpenAI-compatible endpoint (only for provider: custom or self-hosted)."
+    default: ""
+  api-key:
+    description: "Model API key (DigitalOcean model access key, Gemini key, ...). Pass from secrets."
+    default: ""
+  vision:
+    description: "Send PR screenshots to the model for the screenshot check."
+    default: "true"
+  github-token:
+    description: "Token used to comment and label."
+    default: ${{ github.token }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Run PRism
+      shell: bash
+      env:
+        PRISM_PROVIDER: ${{ inputs.provider }}
+        PRISM_MODEL: ${{ inputs.model }}
+        PRISM_BASE_URL: ${{ inputs.base-url }}
+        PRISM_API_KEY: ${{ inputs.api-key }}
+        PRISM_VISION: ${{ inputs.vision }}
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+      # Runs PRism's own code from the action folder; nothing from the PR is executed.
+      run: cd "$GITHUB_ACTION_PATH" && python3 -m prism.main

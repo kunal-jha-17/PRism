@@ -1,0 +1,43 @@
+name: PRism
+
+# pull_request_target lets PRism comment on PRs from forks. It is safe here
+# because PRism never checks out or runs the PR's code: it reads the diff
+# through the API, and the action itself comes from the base branch.
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened, edited, ready_for_review]
+  issue_comment:
+    types: [created]
+  workflow_dispatch:
+  schedule:
+    - cron: "17 */6 * * *"   # refresh the review-queue issue every 6 hours
+
+permissions:
+  contents: write        # only to save .prism/lessons.md and .prism/trusted.txt
+  pull-requests: write
+  issues: write
+
+concurrency:
+  group: prism-${{ github.event.pull_request.number || github.event.issue.number || 'digest' }}
+  cancel-in-progress: false
+
+jobs:
+  prism:
+    if: github.event_name != 'issue_comment' || github.event.issue.pull_request
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      # Checks out the BASE branch (default for pull_request_target), never the PR head.
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: ./
+        env:
+          # Add ONE of these as a repository secret. PRism picks whichever is set.
+          DO_MODEL_KEY: ${{ secrets.DO_MODEL_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          # Set the repo variable PRISM_QUIZ_EVERYONE=true to quiz collaborators too (useful for demos).
+          PRISM_QUIZ_EVERYONE: ${{ vars.PRISM_QUIZ_EVERYONE }}
+        with:
+          provider: ${{ vars.PRISM_PROVIDER }}
+          model: ${{ vars.PRISM_MODEL }}
